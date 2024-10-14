@@ -1,50 +1,75 @@
-# React + TypeScript + Vite
+# ProfileSwitcher UI Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React-based UI client for the ProfileSwitcher application. It provides an admin interface and an app context that renders server-driven UI components.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Admin interface for managing users, roles, permissions, and apps
+- App context with server-driven UI components
+- Authentication and profile switching
+- Responsive design using Tailwind CSS
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Node.js (v14 or later)
+- npm (v6 or later)
 
-- Configure the top-level `parserOptions` property like this:
+## Setup
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-repo/profile-switcher.git
+   cd profile-switcher/ui-client
+   ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+3. Start the development server:
+   ```
+   npm start
+   ```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+The application will be available at `http://localhost:3000`.
+
+## Project Structure
+
+- `src/components/`: React components
+- `src/lib/`: Utility functions and API clients
+- `src/styles/`: Global styles and Tailwind CSS configuration
+
+## Available Scripts
+
+- `npm start`: Runs the app in development mode
+- `npm test`: Launches the test runner
+- `npm run build`: Builds the app for production
+
+## Connecting to Servers
+
+- Update the REST API base URL in `src/lib/api.ts`
+- Update the GraphQL server URL in `src/lib/apollo-client.ts`
+
+## Adding New Components
+
+To add new UI components for the server-driven UI:
+
+1. Create a new component in `src/components/`
+2. Add the component to the `renderComponent` function in `src/components/AppContext.tsx`
+
+## Styling
+
+This project uses Tailwind CSS for styling. Customize the theme in `tailwind.config.js`.
+
+## Testing
+
+Run `npm test` to execute the test suite.
+
+## Building for Production
+
+Run `npm run build` to create a production-ready build in the `build/` directory.
+
+## License
+
+This project is licensed under the MIT License.
