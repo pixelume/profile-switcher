@@ -23,28 +23,24 @@ dist-ssr
 *.sln
 *.sw?
 
+# # Ignore TypeScript build output
+# dist/
+# build/
 
-# Ignore Node.js dependencies
-node_modules/
+# # Ignore TypeScript configuration files
+# tsconfig.json
+# tslint.json
 
-# Ignore TypeScript build output
-dist/
-build/
+# # Ignore IDE files
+# .vscode/
+# .idea/
+# .eclipse/
 
-# Ignore TypeScript configuration files
-tsconfig.json
-tslint.json
+# # Ignore log files
+# *.log
 
-# Ignore IDE files
-.vscode/
-.idea/
-.eclipse/
-
-# Ignore log files
-*.log
-
-# Ignore temp files
-*.tmp
+# # Ignore temp files
+# *.tmp
 
 # Ignore binary files
 *.exe
@@ -55,19 +51,19 @@ tslint.json
 *.gz
 *.bz2
 
-# Ignore test coverage files
-coverage/
+# # Ignore test coverage files
+# coverage/
 
-# Ignore Jest test output
-jest/
-*.test.js
-*.spec.js
+# # Ignore Jest test output
+# jest/
+# *.test.js
+# *.spec.js
 
-# Ignore TypeScript type definitions
-typings/
+# # Ignore TypeScript type definitions
+# typings/
 
-# Ignore package-lock.json (if you're using npm)
-package-lock.json
+# # Ignore package-lock.json (if you're using npm)
+# package-lock.json
 
-# Ignore yarn.lock (if you're using yarn)
-yarn.lock
+# # Ignore yarn.lock (if you're using yarn)
+# yarn.lock
