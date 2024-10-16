@@ -71,3 +71,6 @@ package-lock.json
 
 # Ignore yarn.lock (if you're using yarn)
 yarn.lock
+
+# TypeScript output
+dist/
