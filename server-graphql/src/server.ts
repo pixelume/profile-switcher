@@ -1,11 +1,12 @@
-import express from 'express';
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import http from 'http';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import { v4 as uuidv4 } from 'uuid';
+import express from "express";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import http from "http";
+import cors from "cors";
+import bodyParser from "body-parser";
+import { v4 as uuidv4 } from "uuid";
+import { componentsData } from "./data.js";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -24,9 +25,18 @@ const typeDefs = `
     name: String!
     layout: Component
   }
+  
+  type ComponentData {
+    id: ID!
+    name: String!
+    title: String!
+    dataKey: ID!
+    data: JSON
+  }
 
   type Query {
     getPage(name: String!): Page
+    getComponentData(dataKey: String!): ComponentData
   }
 
   scalar JSON
@@ -36,51 +46,67 @@ const typeDefs = `
 const pages = [
   {
     id: uuidv4(),
-    name: 'home',
+    name: "home",
     layout: {
       id: uuidv4(),
-      type: 'Grid',
+      type: "Grid",
       props: { columns: 2, gap: 4 },
       children: [
         {
           id: uuidv4(),
-          type: 'Card',
-          props: { title: 'Welcome' },
+          type: "Card",
+          props: { title: "Welcome" },
           children: [
             {
               id: uuidv4(),
-              type: 'Text',
-              props: { content: 'Welcome to our server-driven UI demo!' }
-            }
-          ]
+              type: "Text",
+              props: { content: "Welcome to our server-driven UI demo!" },
+            },
+          ],
         },
         {
           id: uuidv4(),
-          type: 'Card',
-          props: { title: 'Stats' },
+          type: "Card",
+          props: { title: "Stats" },
           children: [
             {
               id: uuidv4(),
-              type: 'List',
-              props: { items: ['Users: 1,000', 'Posts: 5,000', 'Comments: 10,000'] }
-            }
-          ]
-        }
-      ]
-    }
-  }
+              type: "List",
+              props: {
+                items: ["Users: 1,000", "Posts: 5,000", "Comments: 10,000"],
+              },
+            },
+          ],
+        },
+        {
+          id: uuidv4(),
+          type: "DataTable",
+          props: {
+            dataKey: "97131800-5f18-402c-9de8-4f1f6fb4c5b2",
+          },
+        },
+      ],
+    },
+  },
 ];
 
 interface GetPageArgs {
-    name: string;
+  name: string;
+}
+
+interface GetComponentDataArgs {
+  dataKey: string;
 }
 
 // Define resolvers
 const resolvers = {
-    Query: {
-      getPage: (_: void, args: GetPageArgs) => pages.find(page => page.name === args.name)
-    }
-  };
+  Query: {
+    getPage: (_: void, args: GetPageArgs) =>
+      pages.find((page) => page.name === args.name),
+    getComponentData: (_: void, args: GetComponentDataArgs) =>
+      componentsData.find((component) => component.dataKey === args.dataKey),
+  },
+};
 
 // Create Apollo Server
 const server = new ApolloServer({
@@ -93,10 +119,10 @@ async function startServer() {
   await server.start();
 
   app.use(
-    '/graphql',
+    "/graphql",
     cors<cors.CorsRequest>(),
     bodyParser.json(),
-    expressMiddleware(server),
+    expressMiddleware(server)
   );
 
   const port = 4000;

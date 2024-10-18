@@ -3,15 +3,24 @@ import { Iteration } from "./types";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { Button } from "../ui/button";
 
-const columnHelper = createColumnHelper<Iteration>();
+interface OtherTable {
+  id: number;
+  name: string;
+  something: string;
+  somethingElse: string;
+}
 
-export const columnDefinitions = [
-  columnHelper.accessor("name", {
+const iterationsColumnHelper = createColumnHelper<Iteration>();
+const otherTableColumnHelper = createColumnHelper<OtherTable>();
+// Helpers for other Data Tables here
+
+const iterationsColumns = [
+  iterationsColumnHelper.accessor("name", {
     id: "name",
     cell: (info) => info.getValue(),
     header: "Iteration",
   }),
-  columnHelper.accessor(
+  iterationsColumnHelper.accessor(
     (row) => (
       <div className="flex flex-col gap-y-1">
         <span className="text-sm font-semibold">{row.created.employee}</span>
@@ -24,7 +33,7 @@ export const columnDefinitions = [
       header: "Created",
     },
   ),
-  columnHelper.accessor(
+  iterationsColumnHelper.accessor(
     (row) => (
       <div className="flex flex-col gap-y-1">
         <span className="text-sm font-semibold">{row.updated.employee}</span>
@@ -37,12 +46,12 @@ export const columnDefinitions = [
       header: "Updated",
     },
   ),
-  columnHelper.accessor("status", {
+  iterationsColumnHelper.accessor("status", {
     id: "status",
     cell: (info) => info.getValue(),
     header: "Status",
   }),
-  columnHelper.accessor(
+  iterationsColumnHelper.accessor(
     (row) => (
       <div className="flex justify-end">
         <Button
@@ -68,3 +77,39 @@ export const columnDefinitions = [
     },
   ),
 ];
+
+const otherTableColumns = [
+  otherTableColumnHelper.accessor("id", {
+    id: "id",
+    cell: (info) => info.getValue(),
+    header: "ID",
+  }),
+  otherTableColumnHelper.accessor("name", {
+    id: "name",
+    cell: (info) => info.getValue(),
+    header: "Name",
+  }),
+  otherTableColumnHelper.accessor("something", {
+    id: "something",
+    cell: (info) => info.getValue(),
+    header: "Something",
+  }),
+  otherTableColumnHelper.accessor("somethingElse", {
+    id: "somethingElse",
+    cell: (info) => info.getValue(),
+    header: "Something Else",
+  }),
+];
+
+// Column definitions for other tables here
+
+export const getColumnDefinitions = (name: string) => {
+  switch (name) {
+    case "Iterations":
+      return iterationsColumns;
+    case "Other":
+      return otherTableColumns;
+    default:
+      return [];
+  }
+};
