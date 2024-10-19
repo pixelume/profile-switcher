@@ -1,5 +1,5 @@
 import { useState /* useEffect */ } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 // import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,14 +9,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Menu /* Home, Users, Settings, HelpCircle */ } from "lucide-react";
 // import { useToast } from "@/components/ui/use-toast";
 import { ModeToggle } from "../mode-toggle";
 import { useLogin } from "@/contexts/LoginContext";
+import {
+  IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
+  IconLogout2,
+} from "@tabler/icons-react";
+import { cn } from "@/lib/utils";
 
 // const API_BASE_URL = "http://localhost:3001/api";
 
-export function Layout({ toggleSidebar }: { toggleSidebar: () => void }) {
+export function Layout({
+  toggleSidebar,
+  isSidebarOpen,
+}: {
+  toggleSidebar: () => void;
+  isSidebarOpen: boolean;
+}) {
   const { isLoggedIn, logout } = useLogin();
   const { pathname } = useLocation();
   const initialProfile = pathname.split("/")[1];
@@ -78,21 +89,36 @@ export function Layout({ toggleSidebar }: { toggleSidebar: () => void }) {
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       {/* Header */}
       <header className="bg-primary shadow-md">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4">
+        <div className="mx-auto flex items-center justify-between px-4 py-4">
           <div className="flex items-center">
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleSidebar}
-              className="mr-4 text-primary-foreground"
+              className="mr-4 text-primary-foreground hover:bg-transparent hover:text-white"
             >
-              <Menu className="h-6 w-6" />
+              <IconLayoutSidebarLeftCollapse
+                className={cn(
+                  "h-8 w-8 rotate-0 scale-100 transition-all duration-300",
+                  {
+                    "rotate-90 scale-0": !isSidebarOpen,
+                  },
+                )}
+                stroke={1}
+              />
+              <IconLayoutSidebarLeftExpand
+                className={cn(
+                  "absolute h-8 w-8 rotate-0 scale-100 transition-all duration-300",
+                  { "-rotate-90 scale-0": isSidebarOpen },
+                )}
+                stroke={1}
+              />
             </Button>
             <h1 className="text-2xl font-bold text-primary-foreground">
               Profile Switcher App
             </h1>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
             <Select value={currentProfile} onValueChange={handleProfileChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select profile" />
@@ -102,11 +128,19 @@ export function Layout({ toggleSidebar }: { toggleSidebar: () => void }) {
                 <SelectItem value="app">App</SelectItem>
               </SelectContent>
             </Select>
-            <ModeToggle />
-            {/* <Button variant="secondary" onClick={handleLogout}> */}
-            <Button variant="secondary" onClick={logout}>
-              Logout
-            </Button>
+            <div>
+              <ModeToggle />
+              {/* <Button variant="secondary" onClick={handleLogout}> */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="bg-transparent font-light text-white hover:bg-background/5 hover:text-white"
+                onClick={logout}
+              >
+                <IconLogout2 className="size-7" stroke={1} />
+                <span className="sr-only">Logout</span>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -152,19 +186,19 @@ export function Layout({ toggleSidebar }: { toggleSidebar: () => void }) {
       </div>
 
       {/* Footer */}
-      <footer className="bg-secondary py-4 text-secondary-foreground">
-        <div className="container mx-auto flex items-center justify-between px-4">
-          <p>&copy; 2023 Profile Switcher App. All rights reserved.</p>
+      <footer className="bg-secondary/30 py-4 text-secondary-foreground">
+        <div className="container mx-auto flex items-center justify-between px-4 text-sm font-light">
+          <p>&copy; 2024 Profile Switcher App. All rights reserved.</p>
           <nav className="flex space-x-4">
-            <a href="/about" className="hover:underline">
+            <Link to="/about" className="hover:underline">
               About
-            </a>
-            <a href="/contact" className="hover:underline">
+            </Link>
+            <Link to="/contact" className="hover:underline">
               Contact
-            </a>
-            <a href="/privacy" className="hover:underline">
+            </Link>
+            <Link to="/privacy" className="hover:underline">
               Privacy Policy
-            </a>
+            </Link>
           </nav>
         </div>
       </footer>

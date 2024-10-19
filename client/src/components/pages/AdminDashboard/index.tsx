@@ -12,7 +12,7 @@ export function AdminDashboard() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Admin Dashboard</h1>
       <Tabs defaultValue="users" className="space-y-4">
-        <TabsList className="grid max-w-xl grid-cols-4">
+        <TabsList className="grid max-w-xl grid-cols-4 bg-secondary/30 dark:bg-foreground/10">
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="roles">Roles</TabsTrigger>
           <TabsTrigger value="permissions">Permissions</TabsTrigger>

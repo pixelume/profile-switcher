@@ -4,7 +4,7 @@ export interface EmployeeAction {
 }
 
 export interface Iteration {
-  id: number;
+  id: string;
   name: string;
   created: EmployeeAction;
   updated: EmployeeAction;

@@ -28,6 +28,7 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
       setIsLoggedIn(true);
+      navigate("/admin");
       axios.defaults.headers.common["x-session-id"] = sessionId;
     },
     [navigate],

@@ -27,7 +27,14 @@ export function RouterProvider() {
     createRoutesFromElements(
       <Route path="/" element={<RootLayout />}>
         <Route path="login" element={<Login />} />
-        <Route element={<Layout toggleSidebar={toggleSidebar} />}>
+        <Route
+          element={
+            <Layout
+              toggleSidebar={toggleSidebar}
+              isSidebarOpen={isSidebarOpen}
+            />
+          }
+        >
           <Route
             path="admin"
             element={<AdminLayout isSidebarOpen={isSidebarOpen} />}

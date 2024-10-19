@@ -2,42 +2,13 @@ import { gql, useQuery } from "@apollo/client";
 import { TableContent } from "./TableContent";
 
 interface DataTableProps {
-  dataKey: string;
+  dataId: string;
   className?: string;
 }
 
-// const {
-//   name,
-//   title,
-//   data: tableData,
-// } = {
-//   name: "Other",
-//   title: "Other",
-//   data: [
-//     {
-//       id: 1,
-//       name: "Name 1",
-//       something: "Something",
-//       somethingElse: "Something Else",
-//     },
-//     {
-//       id: 2,
-//       name: "Name 2",
-//       something: "Something",
-//       somethingElse: "Something Else",
-//     },
-//     {
-//       id: 3,
-//       name: "Name 3",
-//       something: "Something",
-//       somethingElse: "Something Else",
-//     },
-//   ],
-// };
-
-const GET_COMPONENT_DATA = gql`
-  query GetComponentData($dataKey: String!) {
-    getComponentData(dataKey: $dataKey) {
+export const GET_COMPONENT_DATA = gql`
+  query GetComponentData($id: String!) {
+    getComponentData(id: $id) {
       id
       name
       title
@@ -46,14 +17,30 @@ const GET_COMPONENT_DATA = gql`
   }
 `;
 
-export function DataTable({ dataKey, className }: DataTableProps) {
+export const CREATE_ITERATION = gql`
+  mutation CreateIteration {
+    createIteration {
+      id
+      name
+      status
+      updated {
+        datetime
+        employee
+      }
+    }
+  }
+`;
+
+export function DataTable({ dataId, className }: DataTableProps) {
   const { data, loading, error } = useQuery(GET_COMPONENT_DATA, {
-    variables: { dataKey },
+    variables: { id: dataId },
   });
 
   // TODO: Add proper loading and error state components
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  console.log(data.getComponentData);
 
   const { name, title, data: tableData } = data.getComponentData;
 
@@ -63,6 +50,9 @@ export function DataTable({ dataKey, className }: DataTableProps) {
       tableData={tableData}
       className={className}
       title={title}
+      dataId={dataId}
+      getComponentData={GET_COMPONENT_DATA}
+      createMutation={CREATE_ITERATION}
     />
   );
 }

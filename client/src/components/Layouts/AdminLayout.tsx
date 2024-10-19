@@ -1,4 +1,8 @@
-import { Home, Settings, Users } from "lucide-react";
+import {
+  IconLayoutDashboard,
+  IconSettings,
+  IconUsers,
+} from "@tabler/icons-react";
 import { Link, Outlet } from "react-router-dom";
 
 export function AdminLayout({ isSidebarOpen }: { isSidebarOpen: boolean }) {
@@ -16,21 +20,21 @@ export function AdminLayout({ isSidebarOpen }: { isSidebarOpen: boolean }) {
             to="/admin"
             className="flex items-center space-x-2 rounded p-2 hover:bg-primary/10"
           >
-            <Home className="h-5 w-5" />
+            <IconLayoutDashboard className="h-5 w-5" stroke={1} />
             <span>Dashboard</span>
           </Link>
           <Link
             to="/admin/users"
             className="flex items-center space-x-2 rounded p-2 hover:bg-primary/10"
           >
-            <Users className="h-5 w-5" />
+            <IconUsers className="h-5 w-5" stroke={1} />
             <span>Users</span>
           </Link>
           <Link
             to="/admin/settings"
             className="flex items-center space-x-2 rounded p-2 hover:bg-primary/10"
           >
-            <Settings className="h-5 w-5" />
+            <IconSettings className="h-5 w-5" stroke={1} />
             <span>Settings</span>
           </Link>
         </nav>

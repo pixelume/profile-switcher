@@ -3,10 +3,6 @@ import { useQuery, gql } from "@apollo/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { DataTable } from "./DataTable";
-// import { columnDefinitions } from "./TempTable/columnDefenitions";
-// Move to server
-// import { ColumnDef } from "@tanstack/react-table";
-// import { Iteration } from "./TempTable/types";
 
 const GET_PAGE = gql`
   query GetPage($name: String!) {
@@ -98,7 +94,7 @@ const renderComponent = (component: ComponentProps): React.ReactNode => {
         <DataTable
           key={component.id}
           className="col-span-full"
-          dataKey={component.props.dataKey as string}
+          dataId={component.props.dataId as string}
         />
       );
     default:
@@ -108,7 +104,7 @@ const renderComponent = (component: ComponentProps): React.ReactNode => {
 
 export function AppContext() {
   const { loading, error, data } = useQuery(GET_PAGE, {
-    variables: { name: "home" },
+    variables: { name: "page1" },
   });
 
   if (loading) return <p>Loading...</p>;
@@ -122,16 +118,6 @@ export function AppContext() {
     <div className="container mx-auto p-4">
       <h1 className="mb-4 text-2xl font-bold">App Context: {page.name}</h1>
       {renderComponent(page.layout)}
-      {/* <div
-        className={cn("grid", layoutClasses.columns[2], layoutClasses.gap[4])}
-      >
-        <TempTable
-          title="Iterations"
-          className="col-span-full"
-          // columns={columnDefinitions as ColumnDef<Iteration, string>[]}
-          data={tableData.iterations}
-        />
-      </div> */}
     </div>
   );
 }

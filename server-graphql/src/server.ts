@@ -5,13 +5,18 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import http from "http";
 import cors from "cors";
 import bodyParser from "body-parser";
+import {
+  componentsData,
+  pages,
+  iterationsData,
+  updateIterationsData,
+} from "./data.js";
 import { v4 as uuidv4 } from "uuid";
-import { componentsData } from "./data.js";
 
 const app = express();
 const httpServer = http.createServer(app);
 
-// Define the schema
+// Update the typeDefs
 const typeDefs = `
   type Component {
     id: ID!
@@ -30,81 +35,113 @@ const typeDefs = `
     id: ID!
     name: String!
     title: String!
-    dataKey: ID!
     data: JSON
+  }
+
+  type Created {
+    employee: String!
+    datetime: String!
+  }
+
+  type Updated {
+    employee: String!
+    datetime: String!
+  }
+
+  type Iteration {
+    id: ID!
+    name: String!
+    created: Created!
+    updated: Updated!
+    status: String!
+  }
+
+  type Mutation {
+    createIteration: Iteration
+    updateIteration(id: ID!): Iteration
+    deleteIteration(id: ID!): Boolean
   }
 
   type Query {
     getPage(name: String!): Page
-    getComponentData(dataKey: String!): ComponentData
+    getComponentData(id: String!): ComponentData
   }
 
   scalar JSON
 `;
 
 // Sample data
-const pages = [
-  {
-    id: uuidv4(),
-    name: "home",
-    layout: {
-      id: uuidv4(),
-      type: "Grid",
-      props: { columns: 2, gap: 4 },
-      children: [
-        {
-          id: uuidv4(),
-          type: "Card",
-          props: { title: "Welcome" },
-          children: [
-            {
-              id: uuidv4(),
-              type: "Text",
-              props: { content: "Welcome to our server-driven UI demo!" },
-            },
-          ],
-        },
-        {
-          id: uuidv4(),
-          type: "Card",
-          props: { title: "Stats" },
-          children: [
-            {
-              id: uuidv4(),
-              type: "List",
-              props: {
-                items: ["Users: 1,000", "Posts: 5,000", "Comments: 10,000"],
-              },
-            },
-          ],
-        },
-        {
-          id: uuidv4(),
-          type: "DataTable",
-          props: {
-            dataKey: "97131800-5f18-402c-9de8-4f1f6fb4c5b2",
-          },
-        },
-      ],
-    },
-  },
-];
 
 interface GetPageArgs {
   name: string;
 }
 
 interface GetComponentDataArgs {
-  dataKey: string;
+  id: string;
 }
 
-// Define resolvers
+// Update the resolvers
 const resolvers = {
   Query: {
     getPage: (_: void, args: GetPageArgs) =>
       pages.find((page) => page.name === args.name),
     getComponentData: (_: void, args: GetComponentDataArgs) =>
-      componentsData.find((component) => component.dataKey === args.dataKey),
+      componentsData.find((component) => component.id === args.id),
+  },
+  Mutation: {
+    createIteration: () => {
+      const randomNumber = Math.floor(Math.random() * 9) + 1;
+      const generatedName = `2023 year-end run ${randomNumber}`;
+
+      const newIteration = {
+        id: uuidv4(),
+        name: generatedName,
+        created: {
+          employee: "Spongebob Squarepants",
+          datetime: new Date().toISOString(),
+        },
+        updated: {
+          employee: "Spongebob Squarepants",
+          datetime: new Date().toISOString(),
+        },
+        status: "In Progress",
+      };
+      iterationsData.push(newIteration);
+      updateIterationsData(iterationsData);
+      return newIteration;
+    },
+    updateIteration: (_: void, args: { id: string }) => {
+      const index = iterationsData.findIndex(
+        (iteration) => iteration.id === args.id
+      );
+      if (index === -1) return null;
+
+      const currentIteration = iterationsData[index];
+      const newStatus =
+        currentIteration.status === "Completed" ? "In Progress" : "Completed";
+
+      const updatedIteration = {
+        ...currentIteration,
+        status: newStatus,
+        updated: {
+          employee: "Peppa Pig",
+          datetime: new Date().toISOString(),
+        },
+      };
+      iterationsData[index] = updatedIteration;
+      updateIterationsData(iterationsData);
+      return updatedIteration;
+    },
+    deleteIteration: (_: void, args: { id: string }) => {
+      const index = iterationsData.findIndex(
+        (iteration) => iteration.id === args.id
+      );
+      if (index === -1) return false;
+
+      iterationsData.splice(index, 1);
+      updateIterationsData(iterationsData);
+      return true;
+    },
   },
 };
 

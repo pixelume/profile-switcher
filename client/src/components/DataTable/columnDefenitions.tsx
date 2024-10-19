@@ -2,19 +2,58 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Iteration } from "./types";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { Button } from "../ui/button";
+import { gql, useMutation } from "@apollo/client";
+import { GET_COMPONENT_DATA } from ".";
 
-interface OtherTable {
-  id: number;
-  name: string;
-  something: string;
-  somethingElse: string;
-}
+export const UPDATE_ITERATION = gql`
+  mutation UpdateIteration($id: ID!) {
+    updateIteration(id: $id) {
+      id
+      name
+      status
+      updated {
+        datetime
+        employee
+      }
+    }
+  }
+`;
+
+export const DELETE_ITERATION = gql`
+  mutation DeleteIteration($id: ID!) {
+    deleteIteration(id: $id)
+  }
+`;
 
 const iterationsColumnHelper = createColumnHelper<Iteration>();
-const otherTableColumnHelper = createColumnHelper<OtherTable>();
 // Helpers for other Data Tables here
 
-const iterationsColumns = [
+function RowActions({ id, componentId }: { id: string; componentId: string }) {
+  const [deleteIteration] = useMutation(DELETE_ITERATION, {
+    variables: { id },
+    refetchQueries: [
+      { query: GET_COMPONENT_DATA, variables: { id: componentId } },
+    ],
+  });
+  const [updateIteration] = useMutation(UPDATE_ITERATION, {
+    variables: { id },
+    refetchQueries: [
+      { query: GET_COMPONENT_DATA, variables: { id: componentId } },
+    ],
+  });
+  return (
+    <div className="flex justify-end">
+      <Button variant="ghost" size="icon" onClick={() => updateIteration()}>
+        <IconPencil size={20} stroke={1} />
+      </Button>
+      <Button variant="ghost" size="icon" onClick={() => deleteIteration()}>
+        <IconTrash size={20} stroke={1} />
+      </Button>
+    </div>
+  );
+}
+
+const iterationsColumns = (dataId: string) => [
   iterationsColumnHelper.accessor("name", {
     id: "name",
     cell: (info) => info.getValue(),
@@ -52,24 +91,7 @@ const iterationsColumns = [
     header: "Status",
   }),
   iterationsColumnHelper.accessor(
-    (row) => (
-      <div className="flex justify-end">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => console.log(`${row.id} - edit`)}
-        >
-          <IconPencil size={20} stroke={1} />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => console.log(`${row.id} - delete`)}
-        >
-          <IconTrash size={20} stroke={1} />
-        </Button>
-      </div>
-    ),
+    (row) => <RowActions id={row.id} componentId={dataId} />,
     {
       id: "actions",
       cell: (info) => info.getValue(),
@@ -78,37 +100,13 @@ const iterationsColumns = [
   ),
 ];
 
-const otherTableColumns = [
-  otherTableColumnHelper.accessor("id", {
-    id: "id",
-    cell: (info) => info.getValue(),
-    header: "ID",
-  }),
-  otherTableColumnHelper.accessor("name", {
-    id: "name",
-    cell: (info) => info.getValue(),
-    header: "Name",
-  }),
-  otherTableColumnHelper.accessor("something", {
-    id: "something",
-    cell: (info) => info.getValue(),
-    header: "Something",
-  }),
-  otherTableColumnHelper.accessor("somethingElse", {
-    id: "somethingElse",
-    cell: (info) => info.getValue(),
-    header: "Something Else",
-  }),
-];
-
 // Column definitions for other tables here
 
-export const getColumnDefinitions = (name: string) => {
+export const getColumnDefinitions = (name: string, dataId: string) => {
   switch (name) {
     case "Iterations":
-      return iterationsColumns;
-    case "Other":
-      return otherTableColumns;
+      return iterationsColumns(dataId);
+    // ... other tables column definitions
     default:
       return [];
   }

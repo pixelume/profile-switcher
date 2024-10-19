@@ -18,25 +18,42 @@ import { getColumnDefinitions } from "./columnDefenitions";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { useCallback, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
+import { DocumentNode, useMutation } from "@apollo/client";
+import { Badge } from "../ui/badge";
 
-interface TableContentProps<T extends Record<string, unknown>> {
+type PrimitiveValue = string | number | boolean | null;
+type NestedRecord = Record<string, PrimitiveValue>;
+type TableDataItem = Record<string, PrimitiveValue | NestedRecord>;
+
+interface TableContentProps<T extends TableDataItem> {
   name: string;
   title: string;
   tableData: T[];
   className?: string;
+  dataId: string;
+  getComponentData: DocumentNode;
+  createMutation: DocumentNode;
 }
 
-export function TableContent<T extends Record<string, unknown>>({
+export function TableContent<T extends TableDataItem>({
   name,
   title,
   tableData,
   className,
+  dataId,
+  getComponentData,
+  createMutation,
 }: TableContentProps<T>) {
   const columns = useMemo(
-    () => getColumnDefinitions(name) as ColumnDef<T>[],
-    [name],
+    () => getColumnDefinitions(name, dataId) as ColumnDef<T>[],
+    [name, dataId],
   );
-  const [filteredData, setFilteredData] = useState(tableData);
+  const [filteredData, setFilteredData] = useState(() => tableData);
+
+  const [createEntry] = useMutation(createMutation, {
+    refetchQueries: [{ query: getComponentData, variables: { id: dataId } }],
+  });
+
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -84,11 +101,9 @@ export function TableContent<T extends Record<string, unknown>>({
         <div className="rounded-md border">
           {/* <Input type="text" className="max-w-xs" placeholder="Search" /> */}
           <div className="flex items-center justify-between p-4">
-            <span className="text-sm text-muted-foreground">
-              {/* TODO: Get row count from data received from server (should probably be paginated) */}
-              Total: {table.getRowCount()}
-            </span>
-            <Button size="sm" onClick={() => console.log("add clicked")}>
+            {/* TODO: Get row count from data received from server (should probably be paginated) */}
+            <Badge variant="secondary">Total: {table.getRowCount()}</Badge>
+            <Button size="sm" onClick={() => createEntry()}>
               <IconPlus size={16} /> Add
             </Button>
           </div>
