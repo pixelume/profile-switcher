@@ -28,17 +28,17 @@ export const DELETE_ITERATION = gql`
 const iterationsColumnHelper = createColumnHelper<Iteration>();
 // Helpers for other Data Tables here
 
-function RowActions({ id, componentId }: { id: string; componentId: string }) {
+function RowActions({ id, dataType }: { id: string; dataType: string }) {
   const [deleteIteration] = useMutation(DELETE_ITERATION, {
     variables: { id },
     refetchQueries: [
-      { query: GET_COMPONENT_DATA, variables: { id: componentId } },
+      { query: GET_COMPONENT_DATA, variables: { type: dataType } },
     ],
   });
   const [updateIteration] = useMutation(UPDATE_ITERATION, {
     variables: { id },
     refetchQueries: [
-      { query: GET_COMPONENT_DATA, variables: { id: componentId } },
+      { query: GET_COMPONENT_DATA, variables: { type: dataType } },
     ],
   });
   return (
@@ -53,7 +53,7 @@ function RowActions({ id, componentId }: { id: string; componentId: string }) {
   );
 }
 
-const iterationsColumns = (dataId: string) => [
+const iterationsColumns = (dataType: string) => [
   iterationsColumnHelper.accessor("name", {
     id: "name",
     cell: (info) => info.getValue(),
@@ -91,7 +91,7 @@ const iterationsColumns = (dataId: string) => [
     header: "Status",
   }),
   iterationsColumnHelper.accessor(
-    (row) => <RowActions id={row.id} componentId={dataId} />,
+    (row) => <RowActions id={row.id} dataType={dataType} />,
     {
       id: "actions",
       cell: (info) => info.getValue(),
@@ -102,10 +102,10 @@ const iterationsColumns = (dataId: string) => [
 
 // Column definitions for other tables here
 
-export const getColumnDefinitions = (name: string, dataId: string) => {
-  switch (name) {
-    case "Iterations":
-      return iterationsColumns(dataId);
+export const getColumnDefinitions = (dataType: string) => {
+  switch (dataType) {
+    case "iterations":
+      return iterationsColumns(dataType);
     // ... other tables column definitions
     default:
       return [];

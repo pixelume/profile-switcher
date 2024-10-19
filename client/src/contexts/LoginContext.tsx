@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useCallback } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "../components/ui/use-toast";
 import { API_BASE_URL } from "../lib/constants";
 
@@ -18,20 +18,24 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { toast } = useToast();
 
   const getSession = useCallback(
     (sessionId: string | null) => {
       if (!sessionId) {
         console.log("No sessionId");
-        navigate("/login");
+        setIsLoggedIn(false);
+        // navigate("/login");
         return;
       }
+      if (pathname === "/") {
+        navigate("/admin");
+      }
       setIsLoggedIn(true);
-      navigate("/admin");
       axios.defaults.headers.common["x-session-id"] = sessionId;
     },
-    [navigate],
+    [navigate, pathname],
   );
 
   const login = useCallback(

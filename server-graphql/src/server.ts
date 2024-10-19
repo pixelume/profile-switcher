@@ -33,8 +33,7 @@ const typeDefs = `
   
   type ComponentData {
     id: ID!
-    name: String!
-    title: String!
+    type: String!
     data: JSON
   }
 
@@ -64,7 +63,7 @@ const typeDefs = `
 
   type Query {
     getPage(name: String!): Page
-    getComponentData(id: String!): ComponentData
+    getComponentData(type: String!): ComponentData
   }
 
   scalar JSON
@@ -77,7 +76,7 @@ interface GetPageArgs {
 }
 
 interface GetComponentDataArgs {
-  id: string;
+  type: string;
 }
 
 // Update the resolvers
@@ -86,7 +85,8 @@ const resolvers = {
     getPage: (_: void, args: GetPageArgs) =>
       pages.find((page) => page.name === args.name),
     getComponentData: (_: void, args: GetComponentDataArgs) =>
-      componentsData.find((component) => component.id === args.id),
+      // componentsData.find((component) => component.id === args.id),
+      componentsData.find((data) => data.type === args.type),
   },
   Mutation: {
     createIteration: () => {

@@ -1,3 +1,51 @@
+export const homeComponents = [
+  {
+    id: "52796726-ef17-49d9-8976-3194452b8998",
+    type: "Card",
+    props: { title: "Welcome" },
+    children: [
+      {
+        id: "d861825f-fced-49c6-ac41-62f0a5840510",
+        type: "Text",
+        props: { content: "Welcome to our server-driven UI demo!" },
+      },
+    ],
+  },
+  {
+    id: "5bf5793a-7b62-4d05-9b5f-1264818c214d",
+    type: "Card",
+    props: { title: "Stats" },
+    children: [
+      {
+        id: "d8a22869-874a-4b18-99f0-e8763f6242e0",
+        type: "List",
+        props: {
+          items: ["Users: 1,000", "Posts: 5,000", "Comments: 10,000"],
+        },
+      },
+    ],
+  },
+  {
+    id: "8b757747-ae4d-4c8f-ae0b-3bb621805856",
+    type: "DataTable",
+    props: {
+      dataType: "iterations",
+      title: "Iterations",
+    },
+  },
+];
+
+const page1Components = [
+  {
+    id: "3e81a63c-6048-410e-bde6-bf5b31b28709",
+    type: "DataTable",
+    props: {
+      dataType: "iterations",
+      title: "Iterations",
+    },
+  },
+];
+
 export const pages = [
   {
     id: "fdca72e2-fdd4-4d6c-a1d6-92f5bbd16a1b",
@@ -6,41 +54,7 @@ export const pages = [
       id: "a0cf2183-63b7-47d4-ae39-d91e29134643",
       type: "Grid",
       props: { columns: 2, gap: 4 },
-      children: [
-        {
-          id: "52796726-ef17-49d9-8976-3194452b8998",
-          type: "Card",
-          props: { title: "Welcome" },
-          children: [
-            {
-              id: "d861825f-fced-49c6-ac41-62f0a5840510",
-              type: "Text",
-              props: { content: "Welcome to our server-driven UI demo!" },
-            },
-          ],
-        },
-        {
-          id: "5bf5793a-7b62-4d05-9b5f-1264818c214d",
-          type: "Card",
-          props: { title: "Stats" },
-          children: [
-            {
-              id: "d8a22869-874a-4b18-99f0-e8763f6242e0",
-              type: "List",
-              props: {
-                items: ["Users: 1,000", "Posts: 5,000", "Comments: 10,000"],
-              },
-            },
-          ],
-        },
-        {
-          id: "8b757747-ae4d-4c8f-ae0b-3bb621805856",
-          type: "DataTable",
-          props: {
-            dataId: "97131800-5f18-402c-9de8-4f1f6fb4c5b2",
-          },
-        },
-      ],
+      children: homeComponents,
     },
   },
   {
@@ -50,15 +64,7 @@ export const pages = [
       id: "2d1653a0-6cb8-43c7-9ce4-7810e11ff49c",
       type: "Grid",
       props: { columns: 2, gap: 4 },
-      children: [
-        {
-          id: "3e81a63c-6048-410e-bde6-bf5b31b28709",
-          type: "DataTable",
-          props: {
-            dataId: "97131800-5f18-402c-9de8-4f1f6fb4c5b2",
-          },
-        },
-      ],
+      children: page1Components,
     },
   },
 ];
@@ -107,12 +113,11 @@ export let iterationsData = [
 
 export const componentsData = [
   {
-    name: "Iterations",
-    title: "Iterations",
+    type: "iterations",
     id: "97131800-5f18-402c-9de8-4f1f6fb4c5b2",
     data: iterationsData,
   },
-  // Add more components with their data here
+  // Add more components data types here
 ];
 
 export function updateIterationsData(newData: typeof iterationsData) {

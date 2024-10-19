@@ -26,32 +26,32 @@ type NestedRecord = Record<string, PrimitiveValue>;
 type TableDataItem = Record<string, PrimitiveValue | NestedRecord>;
 
 interface TableContentProps<T extends TableDataItem> {
-  name: string;
+  dataType: string;
   title: string;
   tableData: T[];
   className?: string;
-  dataId: string;
   getComponentData: DocumentNode;
   createMutation: DocumentNode;
 }
 
 export function TableContent<T extends TableDataItem>({
-  name,
+  dataType,
   title,
   tableData,
   className,
-  dataId,
   getComponentData,
   createMutation,
 }: TableContentProps<T>) {
   const columns = useMemo(
-    () => getColumnDefinitions(name, dataId) as ColumnDef<T>[],
-    [name, dataId],
+    () => getColumnDefinitions(dataType) as ColumnDef<T>[],
+    [dataType],
   );
   const [filteredData, setFilteredData] = useState(() => tableData);
 
   const [createEntry] = useMutation(createMutation, {
-    refetchQueries: [{ query: getComponentData, variables: { id: dataId } }],
+    refetchQueries: [
+      { query: getComponentData, variables: { type: dataType } },
+    ],
   });
 
   const table = useReactTable({
@@ -99,7 +99,6 @@ export function TableContent<T extends TableDataItem>({
       </CardHeader>
       <CardContent>
         <div className="rounded-md border">
-          {/* <Input type="text" className="max-w-xs" placeholder="Search" /> */}
           <div className="flex items-center justify-between p-4">
             {/* TODO: Get row count from data received from server (should probably be paginated) */}
             <Badge variant="secondary">Total: {table.getRowCount()}</Badge>

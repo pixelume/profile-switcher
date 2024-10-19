@@ -7,14 +7,14 @@ import {
 } from "react-router-dom";
 import { RootLayout } from "./components/Layouts/RootLayout";
 import { ApolloProvider } from "@apollo/client";
-import { AppContext } from "./components/AppContext";
+import { AppContext } from "./components/pages/app/AppContext";
 import { AdminLayout } from "./components/Layouts/AdminLayout";
 import { AppLayout } from "./components/Layouts/AppLayout";
 import { Login } from "./components/Login";
-import { AdminDashboard } from "./components/pages/AdminDashboard";
+import { AdminDashboard } from "./components/pages/admin/AdminDashboard";
 import { client } from "./lib/apollo-client";
-import { Users } from "./components/pages/Users";
-import { Settings } from "./components/pages/Settings";
+import { Users } from "./components/pages/admin/Users";
+import { Settings } from "./components/pages/admin/Settings";
 import { Layout } from "./components/Layouts/Layout";
 
 export function RouterProvider() {
@@ -44,14 +44,14 @@ export function RouterProvider() {
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route
-            path="app"
+            path="app/:appPage?"
             element={
               <ApolloProvider client={client}>
                 <AppLayout isSidebarOpen={isSidebarOpen} />
               </ApolloProvider>
             }
           >
-            <Route index element={<AppContext />} />
+            {/* <Route index element={<AppContext />} /> */}
           </Route>
         </Route>
       </Route>,

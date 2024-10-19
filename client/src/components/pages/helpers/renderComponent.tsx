@@ -1,32 +1,6 @@
-import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import { DataTable } from "@/components/DataTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { DataTable } from "./DataTable";
-
-const GET_PAGE = gql`
-  query GetPage($name: String!) {
-    getPage(name: $name) {
-      id
-      name
-      layout {
-        id
-        type
-        props
-        children {
-          id
-          type
-          props
-          children {
-            id
-            type
-            props
-          }
-        }
-      }
-    }
-  }
-`;
 
 interface ComponentProps {
   id: string;
@@ -48,7 +22,7 @@ const layoutClasses = {
   },
 };
 
-const renderComponent = (component: ComponentProps): React.ReactNode => {
+export const renderComponent = (component: ComponentProps): React.ReactNode => {
   switch (component.type) {
     case "Grid":
       return (
@@ -94,30 +68,11 @@ const renderComponent = (component: ComponentProps): React.ReactNode => {
         <DataTable
           key={component.id}
           className="col-span-full"
-          dataId={component.props.dataId as string}
+          title={component.props.title as string}
+          dataType={component.props.dataType as string}
         />
       );
     default:
       return null;
   }
 };
-
-export function AppContext() {
-  const { loading, error, data } = useQuery(GET_PAGE, {
-    variables: { name: "page1" },
-  });
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-  const page = data.getPage;
-
-  console.log(page);
-
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="mb-4 text-2xl font-bold">App Context: {page.name}</h1>
-      {renderComponent(page.layout)}
-    </div>
-  );
-}

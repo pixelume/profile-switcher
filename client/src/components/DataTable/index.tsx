@@ -2,16 +2,16 @@ import { gql, useQuery } from "@apollo/client";
 import { TableContent } from "./TableContent";
 
 interface DataTableProps {
-  dataId: string;
+  title: string;
+  dataType: string;
   className?: string;
 }
 
 export const GET_COMPONENT_DATA = gql`
-  query GetComponentData($id: String!) {
-    getComponentData(id: $id) {
+  query GetComponentData($type: String!) {
+    getComponentData(type: $type) {
       id
-      name
-      title
+      type
       data
     }
   }
@@ -31,9 +31,9 @@ export const CREATE_ITERATION = gql`
   }
 `;
 
-export function DataTable({ dataId, className }: DataTableProps) {
+export function DataTable({ title, dataType, className }: DataTableProps) {
   const { data, loading, error } = useQuery(GET_COMPONENT_DATA, {
-    variables: { id: dataId },
+    variables: { type: dataType },
   });
 
   // TODO: Add proper loading and error state components
@@ -42,15 +42,14 @@ export function DataTable({ dataId, className }: DataTableProps) {
 
   console.log(data.getComponentData);
 
-  const { name, title, data: tableData } = data.getComponentData;
+  const { type, data: tableData } = data.getComponentData;
 
   return (
     <TableContent
-      name={name}
+      dataType={type}
       tableData={tableData}
       className={className}
       title={title}
-      dataId={dataId}
       getComponentData={GET_COMPONENT_DATA}
       createMutation={CREATE_ITERATION}
     />
