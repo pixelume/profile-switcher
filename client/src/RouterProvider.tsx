@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { RootLayout } from "./components/Layouts/RootLayout";
 import { ApolloProvider } from "@apollo/client";
-import { AppContext } from "./components/pages/app/AppContext";
 import { AdminLayout } from "./components/Layouts/AdminLayout";
 import { AppLayout } from "./components/Layouts/AppLayout";
 import { Login } from "./components/Login";
@@ -50,9 +49,7 @@ export function RouterProvider() {
                 <AppLayout isSidebarOpen={isSidebarOpen} />
               </ApolloProvider>
             }
-          >
-            {/* <Route index element={<AppContext />} /> */}
-          </Route>
+          ></Route>
         </Route>
       </Route>,
     ),

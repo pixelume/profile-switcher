@@ -10,6 +10,9 @@ import {
   pages,
   iterationsData,
   updateIterationsData,
+  addComponentToPage1,
+  DataTableComponent,
+  removeComponentFromPage1,
 } from "./data.js";
 import { v4 as uuidv4 } from "uuid";
 
@@ -59,6 +62,8 @@ const typeDefs = `
     createIteration: Iteration
     updateIteration(id: ID!): Iteration
     deleteIteration(id: ID!): Boolean
+    addComponentToPage1(dataType: String!, title: String!): Component
+    removeComponentFromPage1(id: ID!): Boolean
   }
 
   type Query {
@@ -85,7 +90,6 @@ const resolvers = {
     getPage: (_: void, args: GetPageArgs) =>
       pages.find((page) => page.name === args.name),
     getComponentData: (_: void, args: GetComponentDataArgs) =>
-      // componentsData.find((component) => component.id === args.id),
       componentsData.find((data) => data.type === args.type),
   },
   Mutation: {
@@ -141,6 +145,15 @@ const resolvers = {
       iterationsData.splice(index, 1);
       updateIterationsData(iterationsData);
       return true;
+    },
+    addComponentToPage1: (
+      _: void,
+      args: { dataType: "books" | "iterations"; title: string }
+    ): DataTableComponent => {
+      return addComponentToPage1(args.dataType, args.title);
+    },
+    removeComponentFromPage1: (_: void, args: { id: string }): boolean => {
+      return removeComponentFromPage1(args.id);
     },
   },
 };

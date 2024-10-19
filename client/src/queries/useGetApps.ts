@@ -2,7 +2,7 @@ import axios from "axios";
 import { API_BASE_URL } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 
-interface App {
+export interface App {
   id: string;
   name: string;
 }

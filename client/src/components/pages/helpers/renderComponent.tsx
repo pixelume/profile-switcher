@@ -67,6 +67,7 @@ export const renderComponent = (component: ComponentProps): React.ReactNode => {
       return (
         <DataTable
           key={component.id}
+          componentId={component.id}
           className="col-span-full"
           title={component.props.title as string}
           dataType={component.props.dataType as string}

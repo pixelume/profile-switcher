@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { Iteration } from "./types";
+import { Book, Iteration } from "./types";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { Button } from "../ui/button";
 import { gql, useMutation } from "@apollo/client";
@@ -26,8 +26,10 @@ export const DELETE_ITERATION = gql`
 `;
 
 const iterationsColumnHelper = createColumnHelper<Iteration>();
+const booksColumnHelper = createColumnHelper<Book>();
 // Helpers for other Data Tables here
 
+// TODO: Make this generic in order to update and delete entries for other tables
 function RowActions({ id, dataType }: { id: string; dataType: string }) {
   const [deleteIteration] = useMutation(DELETE_ITERATION, {
     variables: { id },
@@ -100,12 +102,37 @@ const iterationsColumns = (dataType: string) => [
   ),
 ];
 
+const booksColumns = () => [
+  booksColumnHelper.accessor("title", {
+    id: "title",
+    cell: (info) => info.getValue(),
+    header: "Title",
+  }),
+  booksColumnHelper.accessor("author", {
+    id: "author",
+    cell: (info) => info.getValue(),
+    header: "Author",
+  }),
+  booksColumnHelper.accessor("published", {
+    id: "published",
+    cell: (info) => info.getValue(),
+    header: "Published",
+  }),
+  booksColumnHelper.accessor("pages", {
+    id: "pages",
+    cell: (info) => info.getValue(),
+    header: "Pages",
+  }),
+];
+
 // Column definitions for other tables here
 
 export const getColumnDefinitions = (dataType: string) => {
   switch (dataType) {
     case "iterations":
       return iterationsColumns(dataType);
+    case "books":
+      return booksColumns();
     // ... other tables column definitions
     default:
       return [];

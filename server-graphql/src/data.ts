@@ -1,3 +1,12 @@
+export type DataTableComponent = {
+  id: string;
+  type: string;
+  props: {
+    dataType: string;
+    title: string;
+  };
+};
+
 export const homeComponents = [
   {
     id: "52796726-ef17-49d9-8976-3194452b8998",
@@ -25,6 +34,9 @@ export const homeComponents = [
       },
     ],
   },
+];
+
+let page1Components: DataTableComponent[] = [
   {
     id: "8b757747-ae4d-4c8f-ae0b-3bb621805856",
     type: "DataTable",
@@ -33,15 +45,12 @@ export const homeComponents = [
       title: "Iterations",
     },
   },
-];
-
-const page1Components = [
   {
-    id: "3e81a63c-6048-410e-bde6-bf5b31b28709",
+    id: "87467fec-a273-4a38-8070-602707cc0292",
     type: "DataTable",
     props: {
-      dataType: "iterations",
-      title: "Iterations",
+      dataType: "books",
+      title: "Books",
     },
   },
 ];
@@ -111,15 +120,44 @@ export let iterationsData = [
   },
 ];
 
+export const booksData = [
+  {
+    id: "69097bbb-2745-43bb-ba0e-ef371de33f24",
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    published: "1925",
+    pages: 180,
+  },
+  {
+    id: "8812dada-47f7-4e2a-8b27-cc62f6b1e5fe",
+    title: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    published: "1960",
+    pages: 281,
+  },
+  {
+    id: "bacbf992-47c4-40de-b642-f0dd614a164d",
+    title: "The Catcher in the Rye",
+    author: "J.D. Salinger",
+    published: "1951",
+    pages: 224,
+  },
+];
+
 export const componentsData = [
   {
     type: "iterations",
     id: "97131800-5f18-402c-9de8-4f1f6fb4c5b2",
     data: iterationsData,
   },
-  // Add more components data types here
+  {
+    type: "books",
+    id: "0b27156a-1e67-4386-ba1d-13ef011f0125",
+    data: booksData,
+  },
 ];
 
+// Helper functions
 export function updateIterationsData(newData: typeof iterationsData) {
   iterationsData = newData;
   // Update the componentsData array with the new iterationsData
@@ -129,4 +167,42 @@ export function updateIterationsData(newData: typeof iterationsData) {
   if (iterationsComponentIndex !== -1) {
     componentsData[iterationsComponentIndex].data = newData;
   }
+}
+
+export function addComponentToPage1(
+  dataType: "books" | "iterations",
+  title: string
+): DataTableComponent {
+  const newComponent: DataTableComponent = {
+    id: crypto.randomUUID(),
+    type: "DataTable",
+    props: {
+      dataType,
+      title,
+    },
+  };
+
+  page1Components.push(newComponent);
+
+  // Update the pages array with the new page1Components
+  const page1Index = pages.findIndex((page) => page.name === "page1");
+  if (page1Index !== -1) {
+    pages[page1Index].layout.children = page1Components;
+  }
+
+  return newComponent;
+}
+
+export function removeComponentFromPage1(id: string): boolean {
+  const initialLength = page1Components.length;
+  page1Components = page1Components.filter((component) => component.id !== id);
+
+  // Update the pages array with the new page1Components
+  const page1Index = pages.findIndex((page) => page.name === "page1");
+  if (page1Index !== -1) {
+    pages[page1Index].layout.children = page1Components;
+  }
+
+  // Return true if a component was removed, false otherwise
+  return page1Components.length < initialLength;
 }

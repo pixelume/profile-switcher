@@ -12,14 +12,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { IconPlus } from "@tabler/icons-react";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { SearchInput } from "../ui/search-input";
 import { getColumnDefinitions } from "./columnDefenitions";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { useCallback, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { DocumentNode, useMutation } from "@apollo/client";
+import { DocumentNode, useMutation, gql } from "@apollo/client";
 import { Badge } from "../ui/badge";
+import { GET_PAGE } from "../pages/helpers/queries";
 
 type PrimitiveValue = string | number | boolean | null;
 type NestedRecord = Record<string, PrimitiveValue>;
@@ -32,9 +33,17 @@ interface TableContentProps<T extends TableDataItem> {
   className?: string;
   getComponentData: DocumentNode;
   createMutation: DocumentNode;
+  componentId: string;
 }
 
+const RemoveComponentMutation = gql`
+  mutation RemoveComponentFromPage1($id: ID!) {
+    removeComponentFromPage1(id: $id)
+  }
+`;
+
 export function TableContent<T extends TableDataItem>({
+  componentId,
   dataType,
   title,
   tableData,
@@ -47,6 +56,11 @@ export function TableContent<T extends TableDataItem>({
     [dataType],
   );
   const [filteredData, setFilteredData] = useState(() => tableData);
+
+  const [removeComponent] = useMutation(RemoveComponentMutation, {
+    variables: { id: componentId },
+    refetchQueries: [{ query: GET_PAGE, variables: { name: "page1" } }],
+  });
 
   const [createEntry] = useMutation(createMutation, {
     refetchQueries: [
@@ -89,12 +103,23 @@ export function TableContent<T extends TableDataItem>({
       <CardHeader>
         <div className="flex items-center justify-between gap-x-4">
           <h2 className="text-2xl font-semibold">{title}</h2>
-          <SearchInput
-            debounced={false}
-            onSearch={handleSearch}
-            placeholder="Search"
-            className="max-w-xs"
-          />
+          <div className="flex items-center gap-x-10">
+            <SearchInput
+              debounced={false}
+              onSearch={handleSearch}
+              placeholder="Search"
+              className="max-w-xs"
+            />
+            <Button
+              className="size-8 rounded-full p-0"
+              variant="outline"
+              size="sm"
+              onClick={() => removeComponent()}
+              // onClick={() => removeComponentFromPage1(componentId)}
+            >
+              <IconTrash className="size-4" stroke={1} />
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -102,9 +127,11 @@ export function TableContent<T extends TableDataItem>({
           <div className="flex items-center justify-between p-4">
             {/* TODO: Get row count from data received from server (should probably be paginated) */}
             <Badge variant="secondary">Total: {table.getRowCount()}</Badge>
-            <Button size="sm" onClick={() => createEntry()}>
-              <IconPlus size={16} /> Add
-            </Button>
+            {dataType === "iterations" && (
+              <Button size="sm" onClick={() => createEntry()}>
+                <IconPlus size={16} /> Add
+              </Button>
+            )}
           </div>
           <Table>
             <TableHeader>

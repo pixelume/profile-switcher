@@ -11,6 +11,14 @@ export interface Iteration {
   status: string;
 }
 
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  published: string;
+  pages: number;
+}
+
 export interface TableData {
   iterations: Iteration[];
 }

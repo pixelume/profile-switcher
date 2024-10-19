@@ -2,8 +2,11 @@ import axios from "axios";
 import { API_BASE_URL } from "@/lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
+import { Role } from "@/queries/useGetRoles";
 
-const handleUpdate = async (type: string, id: string, data: any) => {
+type UpdateRole = Omit<Role, "id">;
+
+const handleUpdate = async (type: string, id: string, data: UpdateRole) => {
   const response = await axios.put(`${API_BASE_URL}/${type}/${id}`, data);
   return response.data;
 };
@@ -12,8 +15,15 @@ export function useUpdateRole() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   return useMutation({
-    mutationFn: ({ type, id, data }: { type: string; id: string; data: any }) =>
-      handleUpdate(type, id, data),
+    mutationFn: ({
+      type,
+      id,
+      data,
+    }: {
+      type: string;
+      id: string;
+      data: UpdateRole;
+    }) => handleUpdate(type, id, data),
     onSuccess: (_, { type }) => {
       toast({
         title: "Success",

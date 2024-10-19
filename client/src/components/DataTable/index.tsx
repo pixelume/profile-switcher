@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { TableContent } from "./TableContent";
 
 interface DataTableProps {
+  componentId: string;
   title: string;
   dataType: string;
   className?: string;
@@ -31,7 +32,12 @@ export const CREATE_ITERATION = gql`
   }
 `;
 
-export function DataTable({ title, dataType, className }: DataTableProps) {
+export function DataTable({
+  title,
+  dataType,
+  className,
+  componentId,
+}: DataTableProps) {
   const { data, loading, error } = useQuery(GET_COMPONENT_DATA, {
     variables: { type: dataType },
   });
@@ -46,6 +52,7 @@ export function DataTable({ title, dataType, className }: DataTableProps) {
 
   return (
     <TableContent
+      componentId={componentId}
       dataType={type}
       tableData={tableData}
       className={className}
