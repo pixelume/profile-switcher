@@ -1,13 +1,13 @@
+import api from "@/api";
 import { useToast } from "@/components/ui/use-toast";
 import { API_BASE_URL } from "@/lib/constants";
 import { Role } from "@/queries/useGetRoles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 
 type CreateRole = Omit<Role, "id">;
 
 const handleCreate = async (type: string, data: CreateRole) => {
-  const response = await axios.post(`${API_BASE_URL}/${type}`, data);
+  const response = await api.post(`${API_BASE_URL}/${type}`, data);
   return response.data;
 };
 

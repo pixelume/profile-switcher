@@ -1,8 +1,8 @@
-import axios from "axios";
 import { API_BASE_URL } from "@/lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { Permission } from "@/queries/useGetPermissions";
+import api from "@/api";
 
 type UpdatePermission = Omit<Permission, "id">;
 
@@ -11,7 +11,7 @@ const handleUpdate = async (
   id: string,
   data: UpdatePermission,
 ) => {
-  const response = await axios.put(`${API_BASE_URL}/${type}/${id}`, data);
+  const response = await api.put(`${API_BASE_URL}/${type}/${id}`, data);
   return response.data;
 };
 

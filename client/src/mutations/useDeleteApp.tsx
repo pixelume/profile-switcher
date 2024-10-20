@@ -1,10 +1,10 @@
+import api from "@/api";
 import { useToast } from "@/components/ui/use-toast";
 import { API_BASE_URL } from "@/lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 
 const handleDelete = async (type: string, id: string) => {
-  const response = await axios.delete(`${API_BASE_URL}/${type}/${id}`);
+  const response = await api.delete(`${API_BASE_URL}/${type}/${id}`);
   return response.data;
 };
 

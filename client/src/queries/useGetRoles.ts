@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "@/api";
 import { API_BASE_URL } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 
@@ -8,7 +8,7 @@ export interface Role {
 }
 
 const handleGet = async (type: string) => {
-  const response = await axios.get<Role[]>(`${API_BASE_URL}/${type}`);
+  const response = await api.get<Role[]>(`${API_BASE_URL}/${type}`);
   return response.data;
 };
 

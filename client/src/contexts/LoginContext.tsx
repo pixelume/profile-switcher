@@ -1,8 +1,8 @@
 import React, { createContext, useState, useContext, useCallback } from "react";
-import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "../components/ui/use-toast";
 import { API_BASE_URL } from "../lib/constants";
+import api from "@/api";
 
 interface LoginContextType {
   isLoggedIn: boolean;
@@ -26,14 +26,14 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({
       if (!sessionId) {
         console.log("No sessionId");
         setIsLoggedIn(false);
-        // navigate("/login");
+        navigate("/login");
         return;
       }
       if (pathname === "/") {
         navigate("/admin");
       }
       setIsLoggedIn(true);
-      axios.defaults.headers.common["x-session-id"] = sessionId;
+      api.defaults.headers.common["x-session-id"] = sessionId;
     },
     [navigate, pathname],
   );
@@ -41,13 +41,13 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = useCallback(
     async (username: string, password: string) => {
       try {
-        const response = await axios.post(`${API_BASE_URL}/login`, {
+        const response = await api.post(`${API_BASE_URL}/login`, {
           username,
           password,
         });
         const { sessionId } = response.data;
         localStorage.setItem("sessionId", sessionId);
-        axios.defaults.headers.common["x-session-id"] = sessionId;
+        api.defaults.headers.common["x-session-id"] = sessionId;
         setIsLoggedIn(true);
         navigate("/admin");
         toast({
@@ -70,11 +70,11 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = useCallback(async () => {
     try {
       const sessionId = localStorage.getItem("sessionId");
-      await axios.post(`${API_BASE_URL}/logout`, {
+      await api.post(`${API_BASE_URL}/logout`, {
         sessionId,
       });
       localStorage.removeItem("sessionId");
-      delete axios.defaults.headers.common["x-session-id"];
+      delete api.defaults.headers.common["x-session-id"];
       setIsLoggedIn(false);
       navigate("/login");
       toast({

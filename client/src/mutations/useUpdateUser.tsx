@@ -1,13 +1,13 @@
-import axios from "axios";
 import { API_BASE_URL } from "@/lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { User } from "@/queries/useGetUsers";
+import api from "@/api";
 
 type UpdateUser = Omit<User, "id">;
 
 const handleUpdate = async (type: string, id: string, data: UpdateUser) => {
-  const response = await axios.put(`${API_BASE_URL}/${type}/${id}`, data);
+  const response = await api.put(`${API_BASE_URL}/${type}/${id}`, data);
   return response.data;
 };
 
