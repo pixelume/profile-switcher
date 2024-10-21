@@ -1,12 +1,18 @@
-import { DataTable } from "@/components/DataTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContainer } from "@/components/app-components/CardContainer";
+import { DataTable } from "@/components/app-components/DataTable";
 import { cn } from "@/lib/utils";
 
 interface ComponentProps {
   id: string;
   type: string;
-  props: Record<string, string | number | boolean | string[] | number[]>;
   children?: ComponentProps[];
+  props: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    content?: any;
+    columns?: number;
+    gap?: number;
+    title?: string;
+  };
 }
 
 const layoutClasses = {
@@ -43,19 +49,19 @@ export const renderComponent = (component: ComponentProps): React.ReactNode => {
       );
     case "Card":
       return (
-        <Card key={component.id}>
-          <CardHeader>
-            <CardTitle>{component.props.title}</CardTitle>
-          </CardHeader>
-          <CardContent>{component.children?.map(renderComponent)}</CardContent>
-        </Card>
+        <CardContainer
+          id={component.id}
+          title={component.props.title as string}
+        >
+          {component.children?.map(renderComponent)}
+        </CardContainer>
       );
     case "Text":
       return <p key={component.id}>{component.props.content}</p>;
     case "List":
       return (
         <ul key={component.id} className="list-disc pl-5">
-          {(component.props.items as string[]).map(
+          {(component.props.content as string[]).map(
             (item: string, index: number) => (
               <li key={index}>{item}</li>
             ),
@@ -63,14 +69,14 @@ export const renderComponent = (component: ComponentProps): React.ReactNode => {
         </ul>
       );
     case "DataTable":
-      console.log(component);
       return (
         <DataTable
           key={component.id}
           componentId={component.id}
           className="col-span-full"
           title={component.props.title as string}
-          dataType={component.props.dataType as string}
+          content={component.props.content}
+          // dataType={component.props.dataType as string}
         />
       );
     default:

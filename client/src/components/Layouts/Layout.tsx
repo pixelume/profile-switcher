@@ -14,7 +14,6 @@ export function Layout({
   const { isLoggedIn } = useLogin();
   const { pathname } = useLocation();
   const initialProfile = pathname.split("/")[1];
-  console.log(pathname);
   const [currentProfile, setCurrentProfile] = useState(initialProfile);
   const navigate = useNavigate();
 
