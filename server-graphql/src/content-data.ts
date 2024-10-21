@@ -93,6 +93,18 @@ export let listContent = {
     "Use Tabler Icons",
     "Redo Main Layout to be a bit more contemporary and responsive with side navigation pushing content out",
   ],
+  pitch: [
+    `6+ years of React expertise, specializing in complex, data-driven applications.`,
+    `Proven leadership experience as a Lead Frontend Engineer, guiding teams and projects.`,
+    `Strong skills in architecting scalable frontend solutions and establishing best practices.`,
+    `Track record of building high-performance, user-friendly interfaces for intricate systems.`,
+    `Experienced in mentoring and empowering development teams to reach their full potential.`,
+    `Proficient in optimizing application performance and resolving critical bottlenecks.`,
+    `Extensive experience with Agile methodologies and cross-functional collaboration.`,
+    `Skilled in translating complex business requirements into intuitive user experiences.`,
+    `Passionate about staying current with emerging frontend technologies and best practices.`,
+    `Adept at balancing technical excellence with business goals in fast-paced environments.`,
+  ],
 };
 
 export let componentsData = [

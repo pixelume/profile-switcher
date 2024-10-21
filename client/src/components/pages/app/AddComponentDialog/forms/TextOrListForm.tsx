@@ -95,6 +95,7 @@ export function TextOrListForm({
                     <>
                       <SelectItem value="stats">Stats</SelectItem>
                       <SelectItem value="tasks">Tasks</SelectItem>
+                      <SelectItem value="pitch">Pitch</SelectItem>
                     </>
                   )}
                 </SelectContent>
