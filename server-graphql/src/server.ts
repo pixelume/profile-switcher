@@ -6,15 +6,18 @@ import http from "http";
 import cors from "cors";
 import bodyParser from "body-parser";
 import {
-  componentsData,
   pages,
+  addComponentToPage1,
+  Component,
+  removeComponentFromPage1,
+  ChildComponent,
+} from "./ui-data.js";
+import { v4 as uuidv4 } from "uuid";
+import {
+  componentsData,
   iterationsData,
   updateIterationsData,
-  addComponentToPage1,
-  DataTableComponent,
-  removeComponentFromPage1,
-} from "./data.js";
-import { v4 as uuidv4 } from "uuid";
+} from "./content-data.js";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -58,11 +61,24 @@ const typeDefs = `
     status: String!
   }
 
+  input ComponentInput {
+    id: ID
+    type: String!
+    title: String
+    dataSource: String
+    children: [ComponentInput]
+  }
+
   type Mutation {
     createIteration: Iteration
     updateIteration(id: ID!): Iteration
     deleteIteration(id: ID!): Boolean
-    addComponentToPage1(dataType: String!, title: String!): Component
+    addComponentToPage1(
+      type: String!
+      title: String
+      children: [ComponentInput]
+      dataSource: String
+    ): Component
     removeComponentFromPage1(id: ID!): Boolean
   }
 
@@ -148,9 +164,19 @@ const resolvers = {
     },
     addComponentToPage1: (
       _: void,
-      args: { dataType: "books" | "iterations"; title: string }
-    ): DataTableComponent => {
-      return addComponentToPage1(args.dataType, args.title);
+      args: {
+        type: string;
+        title?: string;
+        children?: ChildComponent[];
+        dataSource?: string;
+      }
+    ): Component => {
+      return addComponentToPage1(
+        args.type,
+        args.title,
+        args.children,
+        args.dataSource
+      );
     },
     removeComponentFromPage1: (_: void, args: { id: string }): boolean => {
       return removeComponentFromPage1(args.id);

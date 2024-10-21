@@ -23,3 +23,9 @@ export const GET_PAGE = gql`
     }
   }
 `;
+
+export const REMOVE_COMPONENT = gql`
+  mutation RemoveComponentFromPage1($id: ID!) {
+    removeComponentFromPage1(id: $id)
+  }
+`;
